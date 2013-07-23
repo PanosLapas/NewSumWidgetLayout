@@ -1,0 +1,18 @@
+.nav .menuItem
+{
+    margin-top: 10px;
+}
+
+.lang a
+{
+    float: left !important;
+}
+
+.table tbody tr.Tlabel > td {
+  background-color: #cccccc;
+  
+}
+
+.selected a {
+    font-weight: bold;
+}
