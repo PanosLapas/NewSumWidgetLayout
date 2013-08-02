@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.2.0-1 (tags/2.2.0u1-7139; 2012-06-02T10:55:19+0000) JAXWS-RI/2.2.6-2 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://NewSumFreeService.Server.NewSumServer.scify.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://NewSumFreeService.Server.NewSumServer.scify.org/">
+
+<xs:element name="Exception" type="tns:Exception"/>
+
+<xs:element name="getCategories" type="tns:getCategories"/>
+
+<xs:element name="getCategoriesResponse" type="tns:getCategoriesResponse"/>
+
+<xs:element name="getLinkLabels" type="tns:getLinkLabels"/>
+
+<xs:element name="getLinkLabelsResponse" type="tns:getLinkLabelsResponse"/>
+
+<xs:element name="getSummary" type="tns:getSummary"/>
+
+<xs:element name="getSummaryResponse" type="tns:getSummaryResponse"/>
+
+<xs:element name="getTopics" type="tns:getTopics"/>
+
+<xs:element name="getTopicsByKeyword" type="tns:getTopicsByKeyword"/>
+
+<xs:element name="getTopicsByKeywordResponse" type="tns:getTopicsByKeywordResponse"/>
+
+<xs:element name="getTopicsResponse" type="tns:getTopicsResponse"/>
+
+<xs:complexType name="getTopics">
+<xs:sequence>
+<xs:element name="sUserSources" type="xs:string" minOccurs="0"/>
+<xs:element name="sCategory" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getTopicsResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Exception">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getTopicsByKeyword">
+<xs:sequence>
+<xs:element name="sKeyword" type="xs:string" minOccurs="0"/>
+<xs:element name="sUserSources" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getTopicsByKeywordResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getSummary">
+<xs:sequence>
+<xs:element name="sTopicID" type="xs:string" minOccurs="0"/>
+<xs:element name="sUserSources" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getSummaryResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getLinkLabels">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="getLinkLabelsResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getCategories">
+<xs:sequence>
+<xs:element name="sUserSources" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getCategoriesResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

@@ -3,8 +3,8 @@
   <services/>
   <clients>
     <client name="NewSumFreeService">
-      <wsdl-url>http://143.233.226.97:60001/NewSumFreeService/NewSumFreeService?wsdl</wsdl-url>
-      <local-wsdl-file>143.233.226.97_60001/NewSumFreeService/NewSumFreeService.wsdl</local-wsdl-file>
+      <wsdl-url>http://83.212.110.120:8080/NewSumFreeService/NewSumFreeService?wsdl</wsdl-url>
+      <local-wsdl-file>83.212.110.120_8080/NewSumFreeService/NewSumFreeService.wsdl</local-wsdl-file>
       <package-name>org.scify.newsumserver.server.newsumfreeservice</package-name>
       <catalog-file>catalog.xml</catalog-file>
       <wsimport-options>
@@ -18,7 +18,7 @@
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>wsdlLocation</wsimport-option-name>
-          <wsimport-option-value>http://143.233.226.97:60001/NewSumFreeService/NewSumFreeService?wsdl</wsimport-option-value>
+          <wsimport-option-value>http://83.212.110.120:8080/NewSumFreeService/NewSumFreeService?wsdl</wsimport-option-value>
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>xnocompile</wsimport-option-name>

@@ -28,8 +28,8 @@
     </target>
     <target name="wsimport-client-NewSumFreeService" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/NewSumFreeService"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/NewSumFreeService" destdir="${build.generated.dir}/jax-wsCache/NewSumFreeService" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/NewSumFreeService/wsdl/143.233.226.97_60001/NewSumFreeService/NewSumFreeService.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" wsdlLocation="http://143.233.226.97:60001/NewSumFreeService/NewSumFreeService?wsdl" xnocompile="true" xendorsed="true">
-            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/NewSumFreeService/wsdl/143.233.226.97_60001/NewSumFreeService/NewSumFreeService.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/NewSumFreeService" destdir="${build.generated.dir}/jax-wsCache/NewSumFreeService" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/NewSumFreeService/wsdl/83.212.110.120_8080/NewSumFreeService/NewSumFreeService.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" wsdlLocation="http://83.212.110.120:8080/NewSumFreeService/NewSumFreeService?wsdl" xnocompile="true" xendorsed="true">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/NewSumFreeService/wsdl/83.212.110.120_8080/NewSumFreeService/NewSumFreeService.wsdl"/>
             <produces dir="${build.generated.dir}/jax-wsCache/NewSumFreeService"/>
         </wsimport>
         <copy todir="${build.generated.sources.dir}/jax-ws">
