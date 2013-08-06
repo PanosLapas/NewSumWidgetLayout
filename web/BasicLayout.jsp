@@ -4,41 +4,43 @@
     Author     : plapas
 --%>
 
+<%@page import="javax.jms.Session"%>
+<%@page import="java.net.URLDecoder"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.scify.NewSumServer.Server.JSon.*"%>
 <%@page import="org.scify.NewSumServer.Server.Adaptor.*" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page language="java" contentType="text/html; charset=UTF-8;" pageEncoding="UTF-8" %> 
+<%@ page import="java.net.URLDecoder"%>
+<%
+    String BackGrCol = request.getParameter("backGrCol");
+    String FontCol = request.getParameter("fontCol");
+    String fonFm = request.getParameter("font-family");
+%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1.0;" >
         <link href="css/bootstrap/bootstrap-responsive.min.css" rel="stylesheet" >
-        <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
-        <title>Custom Widget</title>
-<%
-ArrayList colors = new ArrayList();
-colors.add("33CCFF");
-colors.add("66FF99");
-colors.add("FFFF99");
-colors.add("CC99CC");
-colors.add("FFFFCC");
-colors.add("99FFCC");
-colors.add("D3BECF");
-colors.add("FEF1B5");
-colors.add("00FFFF"); 
-colors.add("F6C9CC");
+        <link href="css/bootstrap/CreateCss.jsp?backGrCol=<%out.print(BackGrCol);%>&FontCol=<%out.print(FontCol);%>&fonFm=<%out.print(fonFm);%>" rel="stylesheet">
+        <title>NewSum Widget</title>
+        <%
 
-String RefTime = request.getParameter("refresh");
-    response.setHeader("Refresh", RefTime); 
-//String fonSz= request.getParameter("font-size");
-String fonFm = request.getParameter("font-family"); 
-String categ =  request.getParameter("categories");
-    String categories1[] = categ.split(","); 
-    ArrayList cats = new ArrayList();
-    for(int c = 0 ; c < categories1.length; c++)
-        cats.add(categories1[c]);
-%>
+            ArrayList colors = new ArrayList();
+            colors.add("0099CC");
+            colors.add("9933CC");
+            colors.add("669900");
+            colors.add("FF8800");
+            colors.add("CC0000");
+
+            String categ = "Τεχνολογία,Αθλητισμός,Επιστήμη,Οικονομία,Ελλάδα,Εκπαίδευση,SciFY News,Πολιτισμός";
+            session.setAttribute("categories", categ);
+            String categories1[] = categ.split(",");
+            ArrayList<String> cats = new ArrayList();
+            for (int c = 0; c < categories1.length; c++) {
+                cats.add(categories1[c]);
+            }
+        %>
         <script>
             var divState = {}; // we store the status in this object
             function showhide(id) {
@@ -59,27 +61,27 @@ String categ =  request.getParameter("categories");
         </script>
     </head>
     <body >
-        
-            <div class='navbar navbar-inverse'>
-                <div class='navbar-inner' style="height: auto; text-align:  center;">
-                    <div class="container-fluid">
+
+        <div class='navbar navbar-inverse'>
+            <div class='navbar-inner' style="height: auto; text-align:  center;">
+                <div class="container-fluid">
                     <ul class="nav" role="navigation">
-                        <li style=" font-size: 18px; color: #ffffff; padding-top: 7%;" ><b>News</b></li>                      
+                        <li style=" font-size: 18px; color: #ffffff; padding-top: 2%;" ><a href="http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=<%out.print(fonFm);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"> <img src="img/home.png"><b> News</b></a></i></li>                      
                         <li ><a href="http://www.scify.gr/site/el/our-projects-el/completed-projects-el/newsum-el" target="_blank">powered by <img src="img/logoNewSum2.png"></a></li>
                         <li class="dropdown"><a id="drop1" class="dropdown-toggle" data-toggle="dropdown" role="button" href="#"><img src="img/settings2.png"></a>
-                        <ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
-                            <li role="presentation"><a role="menuitem">Ελληνικά</a></li>
-                            <li role="presentation"><a role="menuitem">English</a></li>
-                            <li role="presentation"><a role="menuitem" href="http://www.scify.gr/site/en/support-us" target="_blank">developed by <img src="img/Scify-min.png"></a></li>
-                        </ul></li>
+                            <ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
+                                <li role="presentation"><a role="menuitem">Ελληνικά</a></li>
+                                <li role="presentation"><a role="menuitem">English</a></li>
+                                <li role="presentation"><a role="menuitem" href="http://www.scify.gr/site/en/support-us" target="_blank">developed by <img src="img/Scify-min.png"></a></li>
+                            </ul></li>
                     </ul>
-                        </div>
                 </div>
             </div>
+        </div>
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span12">
-                     <%-- start web service invocation --%>
+                    <%-- start web service invocation --%>
                     <%
                         try {
                             org.scify.newsumserver.server.newsumfreeservice.NewSumFreeService_Service service = new org.scify.newsumserver.server.newsumfreeservice.NewSumFreeService_Service();
@@ -87,66 +89,38 @@ String categ =  request.getParameter("categories");
                             LinksData dl = NewSumInstance.getLinkLabels();
                             ArrayList<String> values = dl.getLinks();
                             CategoriesData categories = NewSumInstance.getCategories(values);
-                            
-                           int color_id = 0;
-                           %><table class="table " style=" text-align: center;"><%
-                           for(int u = 0 ; u < cats.size(); u++){
-                           %><tr  style=" background-color: #<%out.print(colors.get(color_id));%> ;" ><td><a onclick="showhide('<%out.print(u);%>')" style=" font-family: <%out.print(fonFm);%>; color: #000000;"><%out.print(cats.get(u));%></a></td></tr><%
-                              
-                               TopicsData topics = NewSumInstance.getTopics(values, categories.get(u)); //.getTopics(values, categories.get(1));
-                               color_id++;
-                               //ArrayList<String> topicIds = topics.getTopicIDs();
-                               %><tr id="<%out.print(u);%>" style="font-family: <%out.print(fonFm);%>; color: #000000; font-size: 15px; display:none; background-color: #58595b;"><td><%
-                              for(int TopTwo = 0 ; TopTwo < 2 ; TopTwo++){
-                                  
-                               %><div><a href="category.jsp?cat=<%out.print(cats.get(u));%>&fonFm=<%out.print(fonFm);%>&col=<%out.print(colors.get(color_id-1));%>" style=" color: #ffffff;" ><%out.print(topics.get(TopTwo).getTopicTitle());%></a></div><hr><%
-                              
-                              }%></td></tr><%
-                              
-                           }
-                           %></table><%
-                           
-                          /* int s=0;
-                           for(String each2 : topicIds ){
-                            //   out.print("IDs : "+ each2  );
-                          
-                               s++;
+                    %><table class="table " style=" text-align: center;"><%
+    for (int u = 0; u < cats.size(); u++) {
+        for (int color_ch = 0; color_ch < colors.size(); color_ch++) {
+            if (u % colors.size() == color_ch) {
+                        %><tr class="warning1"  style=" background-color: #<%out.print(BackGrCol);%>;" ><td><a onclick="showhide('<%out.print(u);%>')" style=" color: #<%out.print(colors.get(color_ch));%>;"><b><%out.print(cats.get(u));%></b></a></td></tr><%
+                                }
                             }
-                           for(int i = 0 ; i < topicIds.size(); i++){
-                           Calendar datetime = topics.get(i).getDate();
-                           //datetime.getWeekYear();
-                          // out.print("Day : "+ datetime.getTime().getDay() );
-                           
-                          // out.print("Month : "+ datetime.getTime().getMonth() );
-                          
-                         //  out.print("Year : "+ (datetime.getTime().getYear()+1900));
-                          
-                          // out.print("Hour : "+ datetime.getTime().getHours()+ " : " + datetime.getTime().getMinutes() + " : " + datetime.getTime().getSeconds()   );
-                           
-                           String title = topics.get(i).getTopicTitle();
-                          // out.print("Title : "+ title);
-                          
-                           SummaryData summary = NewSumInstance.getSummary(topicIds.get(i), values);
-                           ArrayList<String> sum = summary.getSummaries();
-                           for (String each1 : sum) {
-                              //  out.print(each1 );
-                            }
-                            int src = topics.get(i).getSourcesNum();
-                        //    out.print("Sources: "+src);
-                           }
-                                     //java.lang.String result = port.getTopics(sUserSources, sCategory);
-                                */     //out.println("Result = "+result);
-                                 } catch (Exception ex) {
-                                     // TODO handle custom exceptions here
-                                     out.print(ex);
-                                 }
-                    %>
-                    <%-- end web service invocation --%>
+                            TopicsData topics = NewSumInstance.getTopics(values, cats.get(u));
+                                        %><tr id="<%out.print(u);%>" class="warning1" style=" font-size: 15px; display:none;"><td><%
+    for (int TopTwo = 0; TopTwo < 2; TopTwo++) {
+
+                                %>
+                                <div>
+                                    <a href="category.jsp?&c=<%out.print(u);%>&fonFm=<%out.print(fonFm);%>&col=<%out.print("FF8800");%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"  style=" color: #<%out.print(FontCol);%>;"><%out.print(topics.get(TopTwo).getTopicTitle());%></a>
+                                </div>
+                                <hr style="height: 3px;"/><%
+
+                                    }%></td></tr><%
+
+                                          }
+                                %></table><%
+                                    } catch (Exception ex) {
+                                        // TODO handle custom exceptions here
+                                        out.print(ex);
+                                    }
+                        %>
+                        <%-- end web service invocation --%>
 
                 </div>
             </div>
         </div>
-        
+
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/scify.index.js"></script>

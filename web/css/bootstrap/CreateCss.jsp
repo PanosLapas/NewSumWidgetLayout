@@ -6,10 +6,11 @@
 
 <%@page contentType="text/css" pageEncoding="UTF-8"%>
  <%
-      String background = request.getParameter("backgroundcol");
-      String rowscol = request.getParameter("rowscol");
-      String titlecol = request.getParameter("titlecol");
-      String fSz = request.getParameter("fonSz");
+      String background = request.getParameter("backGrCol");
+     // String rowscol = request.getParameter("rowscol");
+      //String titlecol = request.getParameter("titlecol");
+      //String fSz = request.getParameter("fonSz");
+      String FontCol = request.getParameter("FontCol");
       String fFm = request.getParameter("fonFm");
  %>
 
@@ -186,7 +187,7 @@ dd{margin-left:10px}
 .dl-horizontal:after{clear:both}
 .dl-horizontal dt{float:left;width:160px;overflow:hidden;clear:left;text-align:right;text-overflow:ellipsis;white-space:nowrap}
 .dl-horizontal dd{margin-left:180px}
-hr{margin:20px 0;border:0;border-top:1px solid #eee;border-bottom:1px solid #fff}
+hr{margin:20px 0;border:0;border-color:#<%out.print(FontCol);%>; border-top:1px solid #eee;border-bottom:1px solid #fff}
 abbr[title],abbr[data-original-title]{cursor:help;border-bottom:1px dotted #999}
 abbr.initialism{font-size:90%;text-transform:uppercase}
 blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}
@@ -369,11 +370,9 @@ table td[class*="span"],table th[class*="span"],.row-fluid table td[class*="span
 .table td.span12,.table th.span12{float:none;width:924px;margin-left:0}
 .table tbody tr.success>td{background-color:#dff0d8}
 .table tbody tr.error>td{background-color:#f2dede}
-.table tbody tr.warning>td{background-color:#<%out.print(rowscol);%>}
-.table tbody tr.warning>td{font-size:<%out.print(fSz);%>px}
 .table tbody tr.warning>td{font-family:<%out.print(fFm);%>}
-.table tbody tr.warning1>td{background-color:#<%out.print(titlecol);%>}
-.table tbody tr.warning1>td{font-size:<%out.print(fSz);%>px}
+.table tbody tr.warning1>td{background-color:#<%out.print(background);%>}
+.table tbody tr.warning1>td{color:#<%out.print(FontCol);%>}
 .table tbody tr.warning1>td{font-family:<%out.print(fFm);%>}
 .table tbody tr.info>td{background-color:#d9edf7}
 .table-hover tbody tr.success:hover>td{background-color:#d0e9c6}

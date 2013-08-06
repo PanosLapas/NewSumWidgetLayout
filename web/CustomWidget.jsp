@@ -4,10 +4,12 @@
     Author     : plapas
 --%>
 
+<%@page import="java.net.URLEncoder"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.scify.NewSumServer.Server.JSon.*"%>
 <%@page import="org.scify.NewSumServer.Server.Adaptor.*" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page  language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.net.URLEncoder"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,13 +18,20 @@
         <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
         <title>Custom Widget</title>
 
-        <%ArrayList str = new ArrayList();
-            //creating an arraylist with 3 strings each one for different element selection
-            str.add("Επιλέξτε background χρώμα");
-            str.add("Επιλέξτε χρώμα κατηγοριών");
-            str.add("Επιλέξτε χρώμα τίτλων ειδήσεων");
+        <%
+        session.setAttribute("categories", "Τεχνολογία,Αθλητισμός,Επιστήμη,Οικονομία,Ελλάδα,Εκπαίδευση,SciFY News,Πολιτισμός");
+            
         %>
         <script>
+            var CatArray = new Array();//arxikopoihsh ths listas me tis kathgories
+            var fontsz = 12;//arxikopoihsh font-size
+            var fontfm = "sans-serif";//arxikopoihsh font-family
+            var refTim = 1800;
+            var backGrCol = "ffffff";
+            var FontCol = "000000";
+            var WidVal = 470;
+            var HeiVal = 270;
+            var thema = "light";
             var divState = {}; // we store the status in this object
             function showhide(id) {
                 if (document.getElementById) {
@@ -40,221 +49,35 @@
                 }
             }
         </script>
-
-        <script type="text/javascript">
-            //Javascript code for color selection
-            var CatArray = new Array();//arxikopoihsh ths listas me tis kathgories
-            var fontsz = 12;//arxikopoihsh font-size
-            var fontfm = "sans-serif";//arxikopoihsh font-family
-            var refTim = 1800;
-            var WidVal = 470;
-            var HeiVal = 270;
-
-            var mouse = "out";
-            var bName = navigator.appName;
-            var bVer = parseInt(navigator.appVersion);
-            var IE4 = (bName == "Microsoft Internet Explorer" && bVer >= 4);
-            var click = "no";
-            var ghex = "empty";
-            var timer;
-            //Initialize colors
-            var rowcol = "ffffff";//row color(Category)
-            var backgrcol = "ffffff";//background color
-            var titlecol = "ffffff";//tittle-row color
-            //End of initialization
-
-            function findPosX(obj)//function for finding X position of color-palette
-            {
-                var curleft = 0;
-                if (obj.offsetParent)
-                {
-                    while (obj.offsetParent)
-                    {
-                        curleft += obj.offsetLeft
-                        obj = obj.offsetParent;
-                    }
+        <script>
+           function CheckTheme(cTh){
+                thema = $(cTh).attr('id');
+               //alert(thema);
+           }
+        </script>
+        <script>
+            function thisTheme(th){
+                //var theme = $(th).attr('value');
+                //alert(theme);
+                alert(thema);
+                if(thema === 'dark'){
+                    backGrCol = '58595b';
+                    FontCol = 'ffffff';
+                   parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol="+backGrCol+"&fontCol="+ FontCol +"&refresh="+refTim;
                 }
-                else if (obj.x)
-                    curleft += obj.x;
-                return curleft;
-            }
-
-            function findPosY(obj)//function for finding Y position of color-palette
-            {
-                var curtop = 0;
-                if (obj.offsetParent)
-                {
-                    while (obj.offsetParent)
-                    {
-                        curtop += obj.offsetTop
-                        obj = obj.offsetParent;
-                    }
-                }
-                else if (obj.y)
-                    curtop += obj.y;
-                return curtop;
-            }
-
-            function showtab(e, n, pin)//Onmouseover function for showing color-palette
-            {
-                sc = n;
-                var buta = n.id;
-                var posx = findPosX(buta);//function call
-                var posy = findPosY(buta);
-
-                var tabid = document.getElementById(pin);
-                tabid.style.display = "block";//show element with id = pin (check html-jsp code for parameters)
-                tabid.style.position = "absolute";
-                tabid.style.left = posx + 5;
-                tabid.style.top = posy + 25;
-
-                if (timer)
-                    clearTimeout(timer);
-            }
-
-            function showval(gg, rr, bb, lineId)//function for showing color detected
-            {
-                mouse = "in";
-                click = "no";
-                var idselected = $(lineId).attr("id");//getting the specific id
-                var hval = "" + deciToHex(gg) + deciToHex(rr) + deciToHex(bb);//convert to hex number the rgb num
-
-                idselected.style.backgroundColor = "#" + hval;//change color style of div
-
-            }
-
-            function clicked(gg, rr, bb, ident)//function called onClick - color chooser (check html code for parameters)
-            {
-                var divid = $(ident).attr("id");//getting the appropriate div-id
-
-                mouse = "in";
-                click = "yes";
-
-                var hval = "" + deciToHex(gg) + deciToHex(rr) + deciToHex(bb);//convert to hex number
-                //checking div-id and then change the appropriate color
-                if (divid == 0) {//background color
-                    backgrcol = hval;
-                }
-                else if (divid == 1) {//row-color (Category)
-                    rowcol = hval;
-                }
-                else if (divid == 2) {//tittle-row color
-                    titlecol = hval;
-                }
-                var tabid = document.getElementById(divid);
-                tabid.style.display = "none";//after select color hide color-palette
-                //refresh iframe - call page with 3 parameters. Each one refers to color. If none color changes by refreshing
-                //parameters get the initial value
-                parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/index.jsp?rowscol=" + rowcol + "&backgroundcol=" + backgrcol + "&titlecol=" + titlecol + "&categories=" + CatArray + "&font-size=" + fontsz + "&font-family=" + fontfm + "&refresh="+refTim;
-            }
-
-            function deltab(par1, par2)//hide specific div
-            {
-                var d = $(par1).attr("id");//grtting the id
-                timer = setTimeout('blotab(' + d + ',' + par2 + ')', 500);//pass the id and the 'for-loop point' number for specifying the exact div
-            }
-
-            function deltaba(p1)
-            {
-                mouse = "out";
-                var tabid = document.getElementById(div2);
-                tabid.style.display = "none";
-                var dispid = document.getElementById(div1.id);
-                dispid.style.backgroundColor = "#FF33CC";
-            }
-
-            function blotab(div1, div2)//hide color-palette depends on previous user's movements (mouseover-mouseout-onclick)
-            {
-                if (mouse == "out" && click == "no")//onmouseout only (without selecting color)
-                {
-
-                    var tabid = document.getElementById(div2);
-                    tabid.style.display = "none";//hide div
-                    var dispid = document.getElementById(div1);
-                    dispid.style.backgroundColor = "#FFFFFF";//change color
-
-                }
-
-                if (mouse == "out" && click == "yes")//onmouseout and selecting color
-                {
-                    var tabid = document.getElementById(div2);
-                    tabid.style.display = "none";//hide div
-                    var gg = hexid.substr(0, 2);
-                    var rr = hexid.substr(2, 2);
-                    var bb = hexid.substr(4, 2);
-                    var hval = "" + deciToHex(gg) + deciToHex(rr) + deciToHex(bb);//get the hex number
-                    var dispid = document.getElementById('cv');
-                    dispid.style.backgroundColor = "#" + hval;//change color to selected color
-                }
-
-
-                if (mouse == "out" && click == "no" && ghex != "empty")
-                {
-                    var tabid = document.getElementById(div2);
-                    tabid.style.display = "none";
-                    var dispid = document.getElementById(div1.id);
-                    dispid.style.backgroundColor = "#" + ghex;
-
+                else{
+                    backGrCol = 'ffffff';
+                    FontCol = '000000';
+                   parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol="+backGrCol+"&fontCol="+ FontCol +"&refresh="+refTim;
+             
+                    
                 }
             }
-
-
-            function getHexNum(num)//function for creating hex number
-            {
-                ar1 = new Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15');
-                ar2 = new Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F');
-                if (num > 15)
-                    return num;
-                else
-                {
-                    red = ar2[num];
-                    return red;
-                }
-            }
-
-            function deciToHex(arg)//convert decimal number to hex number
-            {
-                var res2 = 999;
-                args = arg;
-                while (args > 15)
-                {
-                    arg1 = parseInt(args / 16);
-                    arg2 = args % 16;
-                    arg2 = getHexNum(arg2);
-                    args = arg1;
-
-                    if (res2 == 999)
-                        res2 = arg2.toString();
-                    else
-                        res2 = arg2.toString() + res2.toString();
-                }
-
-                if (args < 16 && res2 != 999)
-                {
-                    def = getHexNum(args);
-                    res2 = def + res2.toString();
-                }
-                else if (res2 == 999)
-                {
-                    if (args < 16)
-                        res2 = getHexNum(args);
-                    else
-                        res2 = 1;
-                }
-
-                if (res2.length == 1)
-                    res2 = "0" + res2;
-
-                return res2;
-            }
-            //End of javascript for color selection
-
         </script>
         <script>
             function addCat(c) {//prosthiki kathgorias
                 var CatId = $(c).attr('id');
                 var CatName = $(c).attr('name');
-                //alert(CatVal);
                 var check = document.getElementById(CatId).checked;
                 if (check === true) {//ean einai epilegmeno to checkbox tote prosthetoume thn kathgoria
                     CatArray.push(CatName);
@@ -272,7 +95,8 @@
             //Script for checking which category the user wants
             function thisCat(t) {
                 //afou exoun epilegei oi kathgories patwntas to koumpi "Proepiskophsh" ginetai anenewsh tou iframe
-                parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&categories=" + CatArray + "&font-family=" + fontfm+ "&refresh="+refTim;
+                
+              window.open("http://localhost:8080/NewSumWebWidgetLayoutDummy/index.jsp?&cat="+CatArray);//"http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol="+backGrCol+"&fontCol="+ FontCol + "&refresh="+refTim;
 
             }
 
@@ -290,7 +114,6 @@
         <script>
             //Change width and height of the widget-frame
             function ChangeSize() {
-                //window.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/CustomWidget.jsp?FrWidth=" + WidVal+"&FrHeight="+HeiVal;
                 var fId = document.getElementById('white1');
                 fId.style.width=WidVal;
                 fId.style.height=HeiVal;
@@ -306,7 +129,7 @@
             function changeFonts() {
                 //afou exoun epilegei h grammatoseira kai to megethos grammatoseiras,  patwntas to koumpi "Proepiskophsh" ginetai anenewsh tou iframe
            
-                parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&categories=" + CatArray + "&font-family=" + fontfm+ "&refresh="+refTim;
+                parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol="+backGrCol+"&fontCol="+ FontCol + "&refresh="+refTim;
             }
         </script>
         <script>
@@ -352,116 +175,62 @@
                         <li ><a href="http://www.scify.gr/site/el/support-us-el" target="_blank">powered by <img src="img/Scify-min.png"></a></li>
                     </ul>
                 </div>
-            </div>
-                        
-
-
-
+            </div>                       
             <h3 style=" text-align:  center;">Διαμορφώστε το widget σύμφωνα με το δικό σας site !</h3>
+            
             <div class="span5">
                 <div id="white" >
-                    <iframe id="white1" name="white1" src="http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&categories=OpenSource,Businness,SciFy News,Europe" width="470" height="270"></iframe> 
+                    <iframe id="white1" name="white1" src="http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=Arial,sans-serif&backGrCol=ffffff&fontCol=000000"   width="470" height="270"></iframe> 
                 </div><br><br><br><br><br><br><br>
             </div>
+            
             <div class="span6" id="color" style=" display: none; padding-left: 15%;">
                 <br>
-                <h5>Επιλογή χρωμάτων</h5>
-                <%for (int point = 0; point < 3; point++) {//staring loop %>  
-                <h6><%out.print(str.get(point));//write each time the appropriate message%></h6>
-                <form name=colorform>
-                    <!-- 
-                         onmouseover call javascript function showtab() with 3 parameters: event, this(id-element) , point(loop number)
-                         onmouseout hide div by calling javascript deltab with 2 paremeters : this(id-element), point(loop number)
-                    -->
-                    Color Viewer: <input type=button size=20 value="       " name=disp id='<%out.print("cv" + point);//each color viewer has his unique id according to loop%>' readonly onmouseover="showtab(event, this,<%out.print(point);%>)"
-                                         onmouseout="deltab(this,<%out.print(point);%>)" style="background-color: #ffcc99;"></input><br><br>
-                    <!--
-                        each loop-div has his unique id according to loop point
-                        onmouseout hide div(color-palette) by calling javascript function deltaba with 'this' parameter (element-id)
-                    -->
-                    <div id='<%out.print(point);%>'  style="display: none;" onmouseout="deltaba(this)">
-
-                        <table cellpadding=2 cellspacing=0 style="border: 1px black;">
-                            <script type="text/javascript">
-            //Javascript code for creating color-palette
-            for (i = 0; i < 256; i += 85)
-            {
-                document.write("<tr style=\"border: 1px black;\">");
-                for (j = 0; j < 256; j = j + 51)
-                {
-                    for (k = 0; k < 256; k = k + 25.5)
-                    {
-                        var ii = Math.round(i);
-                        var jj = Math.round(j);
-                        var kk = Math.round(k);
-
-                        if (ii == 255 && jj == 255 && kk == 255)
-                        {
-                            //onmouseover call showval function with 3 parameters : r , g , b for creating hex color number
-                            //onclick in one color of the color-palette
-                            //call javascript function clicked with 4 parameters : r , g , b , this(element-id)
-                            document.write("<td id='<%out.print(point);%>' onmouseover='showval(" + ii + "," + jj + "," + kk + ",this)' \
-                                                                                    onclick='clicked(" + ii + "," + jj + "," + kk + ", this )' style='border: 0px solid black; width:8px; height: 8px; background-color: rgb(" + ii + "," + jj + "," + kk + ");'> \
-                                                                                    <a href=http://www.hscripts.com style='text-decoration: none; \
-                                                                                    font-family: arial, verdana, san-serif; color: blue; font-size: 10px;'>H</a></td>");
-                        } else {
-                            document.write("<td id='<%out.print(point);%>' onmouseover='showval(" + ii + "," + jj + "," + kk + ",this)' \
-                                                                            onclick='clicked(" + ii + "," + jj + "," + kk + ", this)' style=\"border: 0px solid black; width:8px; height: 8px; \
-                                                                            font-size: 5px; background-color: rgb(" + ii + "," + jj + "," + kk + ");\"" + "> </td>");
-                        }
-                    }
-                    document.write("</tr><tr>");
-                }
-                document.write("</tr>");
-
-            }
-            //End of javascript code for color-palette
-                            </script>
-                        </table>
-                    </div>
-                </form>
-                <% }//end of loop%>
+                <h5>Επιλογή Θέμα</h5>
+                <br><br>
+                <select>
+                    <option id="dark" onclick="CheckTheme(this)">Dark theme</option>
+                    <option id="light" onclick="CheckTheme(this)">Light theme</option>
+                </select>
+                <br><br><br>
+                <input type="submit" id="checked" onclick="thisTheme(this)"  class="btn btn-primary" value="Προεπισκόπηση">
             </div>
+            
             <div class="span6" id="categories" style=" padding-left: 15%; display: none;">
                 <br>
                 <h5>Επιλογή Κατηγοριών</h5>
-
-
-                <input type="checkbox" onclick="addCat(this)" name="World" id="world" >
-                Κόσμος
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="Technology" id="technol" >
+                <input type="checkbox" onclick="addCat(this)" name="Τεχνολογία" id="tech" >
                 Τεχνολογία
                 <br>
                 <input type="checkbox" onclick="addCat(this)" name="Science" id="science" >
                 Επιστήμη
                 <br>
-                <input type="checkbox" onclick="addCat(this)" name="Ελλάδα" id="hellas" >
+                <input type="checkbox" onclick="addCat(this)" name="Sports" id="sports" >
+                Αθλητισμός
+                <br>
+                <input type="checkbox" onclick="addCat(this)" name="Greece" id="hellas" >
                 Ελλάδα
                 <br>
-                <input type="checkbox" onclick="addCat(this)" name="Αθλητισμός" id="sports" >
-                Αθλητισμός
+                <input type="checkbox" onclick="addCat(this)" name="World" id="world" >
+                Κόσμος
                 <br>               
-                <input type="checkbox" onclick="addCat(this)" name="Πολιτισμός" id="civil" >
-                Πολιτισμός
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="Οικονομία" id="economy" >
-                Οικονομία
-                <br>
                 <input type="checkbox" onclick="addCat(this)" name="SciFY News" id="scify" >
                 SciFY News
                 <br>
-                <input type="checkbox" onclick="addCat(this)" name="Εκπαίδευση" id="edu" >
-                Εκπαίδευση
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="Γενικά" id="general" >
+                <input type="checkbox" onclick="addCat(this)" name="General" id="general" >
                 Γενικά
                 <br>
+                <input type="checkbox" onclick="addCat(this)" name="Economy" id="economy" >
+                Οικονομία
                 <br>
-                <!--<div class="form-actions" style=" width: 30%;" >-->
+                <input type="checkbox" onclick="addCat(this)" name="Education" id="edu" >
+                Εκπαίδευση
+                <br>
+                <input type="checkbox" onclick="addCat(this)" name="Culture" id="civil" >
+                Πολιτισμός
+                <br>
+                <br>
                 <input type="submit" id="checked" onclick="thisCat(this)"  class="btn btn-primary" value="Προεπισκόπηση">
-
-                <!--</div>-->
             </div>
 
             <div class="span6" id="size" style=" padding-left: 15%; display: none;">
@@ -479,10 +248,10 @@
                     <option id="h<%out.print(h);%>" onclick="getHeight(this)"><%out.print(h + "px");%></option>
                     <%}%>
                 </select>
-                <div class="form-actions" style=" width: 30%;">
+                <br><br><br>
                     <button type="submit" onclick="ChangeSize()" class="btn btn-primary">Προεπισκόπηση</button>
-                </div>
             </div>
+                
             <div class="span6" id="font" style=" padding-left: 15%; display: none;">
                 <br>
                 <h5>Επιλέξτε γραμματοσειρά</h5>
@@ -498,13 +267,11 @@
                     <option onclick="getFamily(this)">"Lucida Console", Monaco, monospace</option>
                     <option onclick="getFamily(this)">Fixed, monospace</option>
                     <option onclick="getFamily(this)">Courier New Lucida Console</option>
-
                 </select>
-                <br>
-                <div class="form-actions" style=" width: 30%;">
+                <br><br><br>
                     <button type="submit" onclick="changeFonts()" class="btn btn-primary">Προεπισκόπηση</button>
-                </div>
             </div>   
+                
             <div class="span6" id="refresh" style=" padding-left: 15%; display: none;">
                 <br>
                 <h5>Επιλέξτε το χρόνο αυτόματης ανανέωσης του widget (mins)</h5>
@@ -514,25 +281,18 @@
                     <option  id="m<%out.print(m);%>" onclick="getRefreshTime(this)"><%out.print(m);%></option>
                     <%}%>
                 </select>
-                <div class="form-actions" style=" width: 30%;">
                     <button type="submit" onclick="refresh()" class="btn btn-primary">Αποθήκευση</button>
-                </div>
             </div>
+                
             <div class="span6"id="code" style=" padding-left: 15%; height: 100%;">
                 <br>
                 <h5>Κάντε copy-paste τον κώδικα στο σημείο που θέλετε στο site σας και το widget είναι έτοιμο </h5>
                 <div class="form-actions" id="generatedCode">
                     <input type="button" onclick="Generate()" value="Παραγωγή κώδικα">
-
                     <textarea readonly="readonly" id="CodeText" name="CodeText" style="width: 100%;"></textarea>
-                   <!-- <input type="button" onClick="ClipBoard()" value="Αντιγραφή κώδικα">-->
                 </div>
-
-
-
-
             </div>
-
+                
         </div>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
