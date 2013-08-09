@@ -187,7 +187,7 @@ dd{margin-left:10px}
 .dl-horizontal:after{clear:both}
 .dl-horizontal dt{float:left;width:160px;overflow:hidden;clear:left;text-align:right;text-overflow:ellipsis;white-space:nowrap}
 .dl-horizontal dd{margin-left:180px}
-hr{margin:20px 0;border:0;border-color:#<%out.print(FontCol);%>; border-top:1px solid #eee;border-bottom:1px solid #fff}
+hr{margin:20px 0;border:0;border-color:#000000; border-top:1px solid #eee;border-bottom:1px solid #fff}
 abbr[title],abbr[data-original-title]{cursor:help;border-bottom:1px dotted #999}
 abbr.initialism{font-size:90%;text-transform:uppercase}
 blockquote{padding:0 0 0 15px;margin:0 0 20px;border-left:5px solid #eee}

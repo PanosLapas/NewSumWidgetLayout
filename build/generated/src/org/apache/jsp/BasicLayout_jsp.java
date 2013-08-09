@@ -95,7 +95,7 @@ out.print(fonFm);
                 colors.add("CDC8B1");
             }
 
-            String categ = "";//"Τεχνολογία,Αθλητισμός,Επιστήμη,Οικονομία,Ελλάδα,Εκπαίδευση,SciFY News,Πολιτισμός,Κόσμος,Γενικά";
+            String categ = "Τεχνολογία,Αθλητισμός,Επιστήμη,Οικονομία,Ελλάδα,Εκπαίδευση,SciFY News,Πολιτισμός,Κόσμος,Γενικά";
             session.setAttribute("categories", categ);
             String categories1[] = categ.split(",");
             ArrayList<String> cats = new ArrayList();
@@ -119,7 +119,13 @@ out.print(fonFm);
       out.write("                        }\n");
       out.write("                    }\n");
       out.write("                    divid.style.display = (divid.style.display == 'block' ? 'none' : 'block');\n");
+      out.write("                    if(document.getElementById(\"im\"+id).className===\"icon-arrow-right\"){\n");
+      out.write("                       document.getElementById(\"im\"+id).className=\"icon-arrow-down\"; \n");
+      out.write("                    }else{\n");
+      out.write("                       document.getElementById(\"im\"+id).className=\"icon-arrow-right\"; \n");
+      out.write("                    }\n");
       out.write("                }\n");
+      out.write("               \n");
       out.write("            }\n");
       out.write("        </script>\n");
       out.write("    </head>\n");
@@ -156,21 +162,23 @@ out.print(FontCol);
                 org.scify.newsumserver.server.newsumfreeservice.NewSumFreeService port = service.getNewSumFreeServicePort();
                 LinksData dl = NewSumInstance.getLinkLabels();
                 ArrayList<String> values = dl.getLinks();
-                CategoriesData categories = NewSumInstance.getCategories(values);
-        
+                // CategoriesData categories = NewSumInstance.getCategories(values);
+
       out.write("<table class=\"table \" style=\" text-align: center;\">");
 
             for (int u = 0; u < cats.size(); u++) {
                 for (int color_ch = 0; color_ch < colors.size(); color_ch++) {
                     if (u % colors.size() == color_ch) {
-            
+
       out.write("<tr class=\"warning1\"  style=\" background-color: #");
 out.print(BackGrCol);
       out.write(";\" ><td><a onclick=\"showhide('");
 out.print(u);
       out.write("')\" style=\" color: #");
 out.print(colors.get(color_ch));
-      out.write(";\"><b>");
+      out.write(";\"><i id=\"im");
+out.print(u);
+      out.write("\" class=\"icon-arrow-right\"></i><b>");
 out.print(cats.get(u));
       out.write("</b></a></td></tr>");
 
@@ -197,13 +205,15 @@ out.print("FF8800");
 out.print(BackGrCol);
       out.write("&fontCol=");
 out.print(FontCol);
-      out.write("\"  style=\" color: #");
+      out.write("\"  style=\"color: #");
 out.print(FontCol);
-      out.write(";\">");
+      out.write("; \">");
 out.print(topics.get(TopTwo).getTopicTitle());
       out.write("</a>\n");
       out.write("                    </div>\n");
-      out.write("                    <hr style=\"height: 3px;\"/>");
+      out.write("                    <hr style=\"border-color:#");
+out.print(FontCol);
+      out.write("; height: 3px;\"/>");
 
 
                         }
@@ -215,27 +225,10 @@ out.print(topics.get(TopTwo).getTopicTitle());
       out.write("</table>");
 
                     } catch (Exception ex) {
-                        // TODO handle custom exceptions here
-                        out.print(ex);
-            
-      out.write("\n");
-      out.write("        <div class=\"modal hide fade fluid\" id=\"serverDown\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n");
-      out.write("            <div class=\"modal-header\">\n");
-      out.write("                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">×</button>\n");
-      out.write("                <h3 id=\"myModalLabel\" style=\"text-align: center;\">Server down</h3>\n");
-      out.write("            </div>\n");
-      out.write("            <div class=\"modal-body fluid\">\n");
-      out.write("                <div align=\"center\">\n");
-      out.write("                    <img align=\"center\" style=\"height:20%;width:20%;\" src=\"img/underconstruction.jpg\">\n");
-      out.write("                    <h3 style=\"text-align: center;\"> The server is currently offline. Please try again later</h3>\n");
-      out.write("                </div>\n");
-      out.write("            </div>\n");
-      out.write("        </div>\n");
-      out.write("        ");
-
+                        // TODO handle custom exceptions here 
             }
-        
-      out.write("\n");
+       
+      out.write(" \n");
       out.write("        ");
       out.write("   \n");
       out.write("\n");

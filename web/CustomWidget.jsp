@@ -19,8 +19,8 @@
         <title>Custom Widget</title>
 
         <%
-        session.setAttribute("categories", "Τεχνολογία,Αθλητισμός,Επιστήμη,Οικονομία,Ελλάδα,Εκπαίδευση,SciFY News,Πολιτισμός");
-            
+            session.setAttribute("categories", "Τεχνολογία,Αθλητισμός,Επιστήμη,Οικονομία,Ελλάδα,Εκπαίδευση,SciFY News,Πολιτισμός");
+
         %>
         <script>
             var CatArray = new Array();//arxikopoihsh ths listas me tis kathgories
@@ -50,34 +50,29 @@
             }
         </script>
         <script>
-           function CheckTheme(cTh){
+            function CheckTheme(cTh) {
                 thema = $(cTh).attr('id');
-               //alert(thema);
-           }
+                //alert(thema);
+            }
         </script>
         <script>
-            function thisTheme(th){
-                //var theme = $(th).attr('value');
-                //alert(theme);
-                alert(thema);
-                if(thema === 'dark'){
+            function thisTheme(th) {
+                if (thema === 'dark') {
                     backGrCol = '58595b';
                     FontCol = 'ffffff';
-                   parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol="+backGrCol+"&fontCol="+ FontCol +"&refresh="+refTim;
+                    parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol=" + backGrCol + "&fontCol=" + FontCol + "&refresh=" + refTim;
                 }
-                else{
+                else {
                     backGrCol = 'ffffff';
                     FontCol = '000000';
-                   parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol="+backGrCol+"&fontCol="+ FontCol +"&refresh="+refTim;
-             
-                    
+                    parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol=" + backGrCol + "&fontCol=" + FontCol + "&refresh=" + refTim;
                 }
             }
         </script>
         <script>
             function addCat(c) {//prosthiki kathgorias
                 var CatId = $(c).attr('id');
-                var CatName = $(c).attr('name');
+                var CatName = $(c).attr('value');
                 var check = document.getElementById(CatId).checked;
                 if (check === true) {//ean einai epilegmeno to checkbox tote prosthetoume thn kathgoria
                     CatArray.push(CatName);
@@ -93,11 +88,10 @@
         </script>
         <script>
             //Script for checking which category the user wants
-            function thisCat(t) {
+            function thisCat() {
                 //afou exoun epilegei oi kathgories patwntas to koumpi "Proepiskophsh" ginetai anenewsh tou iframe
-                
-              window.open("http://localhost:8080/NewSumWebWidgetLayoutDummy/index.jsp?&cat="+CatArray);//"http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol="+backGrCol+"&fontCol="+ FontCol + "&refresh="+refTim;
-
+                // window.open("http://localhost:8080/NewSumWebWidgetLayoutDummy/tst.jsp?&cat="+CatArray);//"http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol="+backGrCol+"&fontCol="+ FontCol + "&refresh="+refTim;
+              
             }
 
         </script>
@@ -115,9 +109,9 @@
             //Change width and height of the widget-frame
             function ChangeSize() {
                 var fId = document.getElementById('white1');
-                fId.style.width=WidVal;
-                fId.style.height=HeiVal;
-                
+                fId.style.width = WidVal;
+                fId.style.height = HeiVal;
+
             }
         </script>
         <script>
@@ -128,24 +122,24 @@
         <script>
             function changeFonts() {
                 //afou exoun epilegei h grammatoseira kai to megethos grammatoseiras,  patwntas to koumpi "Proepiskophsh" ginetai anenewsh tou iframe
-           
-                parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol="+backGrCol+"&fontCol="+ FontCol + "&refresh="+refTim;
+
+                parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol=" + backGrCol + "&fontCol=" + FontCol + "&refresh=" + refTim;
             }
         </script>
         <script>
-            function getRefreshTime(time){
+            function getRefreshTime(time) {
                 refTim = $(time).attr('value');
-                refTim = refTim * 60 ;
+                refTim = refTim * 60;
             }
         </script>
         <script type="text/javascript">
             function Generate() {
                 var gener = document.getElementById('white1');
                 var src = $(gener).attr('src');
-                src = "http://localhost:8080/NewSumWebWidgetLayoutDummy/index.jsp?rowscol=" + rowcol + "&backgroundcol=" + backgrcol + "&titlecol=" + titlecol + "&categories=" + CatArray + "&font-size=" + fontsz + "&font-family=" + fontfm+ "&refresh="+refTim;
-                var w = gener.style.width; 
+                src = "http://localhost:8080/NewSumWebWidgetLayoutDummy/index.jsp?rowscol=" + rowcol + "&backgroundcol=" + backgrcol + "&titlecol=" + titlecol + "&categories=" + CatArray + "&font-size=" + fontsz + "&font-family=" + fontfm + "&refresh=" + refTim;
+                var w = gener.style.width;
                 var h = gener.style.height;
-                document.getElementById('CodeText').value = "<iframe src='" + src + "' width='" + w + "' height='"+ h+"'>";
+                document.getElementById('CodeText').value = "<iframe src='" + src + "' width='" + w + "' height='" + h + "'>";
                 //alert(src);
                 //alert(w);
             }
@@ -177,13 +171,13 @@
                 </div>
             </div>                       
             <h3 style=" text-align:  center;">Διαμορφώστε το widget σύμφωνα με το δικό σας site !</h3>
-            
+
             <div class="span5">
                 <div id="white" >
                     <iframe id="white1" name="white1" src="http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=Arial,sans-serif&backGrCol=ffffff&fontCol=000000"   width="470" height="270"></iframe> 
                 </div><br><br><br><br><br><br><br>
             </div>
-            
+
             <div class="span6" id="color" style=" display: none; padding-left: 15%;">
                 <br>
                 <h5>Επιλογή Θέμα</h5>
@@ -195,42 +189,44 @@
                 <br><br><br>
                 <input type="submit" id="checked" onclick="thisTheme(this)"  class="btn btn-primary" value="Προεπισκόπηση">
             </div>
-            
+
             <div class="span6" id="categories" style=" padding-left: 15%; display: none;">
-                <br>
-                <h5>Επιλογή Κατηγοριών</h5>
-                <input type="checkbox" onclick="addCat(this)" name="Τεχνολογία" id="tech" >
-                Τεχνολογία
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="Science" id="science" >
-                Επιστήμη
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="Sports" id="sports" >
-                Αθλητισμός
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="Greece" id="hellas" >
-                Ελλάδα
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="World" id="world" >
-                Κόσμος
-                <br>               
-                <input type="checkbox" onclick="addCat(this)" name="SciFY News" id="scify" >
-                SciFY News
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="General" id="general" >
-                Γενικά
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="Economy" id="economy" >
-                Οικονομία
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="Education" id="edu" >
-                Εκπαίδευση
-                <br>
-                <input type="checkbox" onclick="addCat(this)" name="Culture" id="civil" >
-                Πολιτισμός
-                <br>
-                <br>
-                <input type="submit" id="checked" onclick="thisCat(this)"  class="btn btn-primary" value="Προεπισκόπηση">
+                <form name="form1" id="form1" method="post" action="CustomWidget.jsp">
+                    <br>
+                    <h5>Επιλογή Κατηγοριών</h5>
+                    <input type="checkbox" onclick="addCat(this)" name="s" id="tech" value="Τεχνολογία">
+                    Τεχνολογία
+                    <br>
+                    <input type="checkbox" onclick="addCat(this)" name="s" id="science" value="Επιστήμη">
+                    Επιστήμη
+                    <br>
+                    <input type="checkbox" onclick="addCat(this)" name="s" id="sports" value="Αθλητισμός">
+                    Αθλητισμός
+                    <br>
+                    <input type="checkbox" onclick="addCat(this)" name="s" id="hellas" value="">
+                    Ελλάδα
+                    <br>
+                    <input type="checkbox" onclick="addCat(this)" name="s" id="world" value="">
+                    Κόσμος
+                    <br>               
+                    <input type="checkbox" onclick="addCat(this)" name="s" id="scify" value="SciFY News">
+                    SciFY News
+                    <br>
+                    <input type="checkbox" onclick="addCat(this)" name="s" id="general" value="">
+                    Γενικά
+                    <br>
+                    <input type="checkbox" onclick="addCat(this)" name="s" id="economy" value="">
+                    Οικονομία
+                    <br>
+                    <input type="checkbox" onclick="addCat(this)" name="s" id="edu" value="">
+                    Εκπαίδευση
+                    <br>
+                    <input type="checkbox" onclick="addCat(this)" name="s" id="civil" value="">
+                    Πολιτισμός
+                    <br>
+                    <br>
+                    <button type="submit" id="checked" class="btn btn-primary" onclick="thisCat()" >Προεπισκόπηση</button>
+                </form>
             </div>
 
             <div class="span6" id="size" style=" padding-left: 15%; display: none;">
@@ -249,9 +245,9 @@
                     <%}%>
                 </select>
                 <br><br><br>
-                    <button type="submit" onclick="ChangeSize()" class="btn btn-primary">Προεπισκόπηση</button>
+                <button type="submit" onclick="ChangeSize()" class="btn btn-primary">Προεπισκόπηση</button>
             </div>
-                
+
             <div class="span6" id="font" style=" padding-left: 15%; display: none;">
                 <br>
                 <h5>Επιλέξτε γραμματοσειρά</h5>
@@ -269,9 +265,9 @@
                     <option onclick="getFamily(this)">Courier New Lucida Console</option>
                 </select>
                 <br><br><br>
-                    <button type="submit" onclick="changeFonts()" class="btn btn-primary">Προεπισκόπηση</button>
+                <button type="submit" onclick="changeFonts()" class="btn btn-primary">Προεπισκόπηση</button>
             </div>   
-                
+
             <div class="span6" id="refresh" style=" padding-left: 15%; display: none;">
                 <br>
                 <h5>Επιλέξτε το χρόνο αυτόματης ανανέωσης του widget (mins)</h5>
@@ -281,9 +277,9 @@
                     <option  id="m<%out.print(m);%>" onclick="getRefreshTime(this)"><%out.print(m);%></option>
                     <%}%>
                 </select>
-                    <button type="submit" onclick="refresh()" class="btn btn-primary">Αποθήκευση</button>
+                <button type="submit" onclick="refresh()" class="btn btn-primary">Αποθήκευση</button>
             </div>
-                
+
             <div class="span6"id="code" style=" padding-left: 15%; height: 100%;">
                 <br>
                 <h5>Κάντε copy-paste τον κώδικα στο σημείο που θέλετε στο site σας και το widget είναι έτοιμο </h5>
@@ -292,7 +288,7 @@
                     <textarea readonly="readonly" id="CodeText" name="CodeText" style="width: 100%;"></textarea>
                 </div>
             </div>
-                
+
         </div>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
