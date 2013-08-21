@@ -104,7 +104,7 @@
             for (int u = 0; u < cats.size(); u++) {
                 for (int color_ch = 0; color_ch < colors.size(); color_ch++) {
                     if (u % colors.size() == color_ch) {
-%><tr class="warning1"  style=" background-color: #<%out.print(BackGrCol);%>;" ><td><a href="category.jsp?c=<%out.print(u);%>&fonFm=<%out.print(fonFm);%>&col=<%out.print("FF8800");%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>" onclick="showhide('<%out.print(u);%>')" style=" color: #<%out.print(colors.get(color_ch));%>;"><i id="im<%out.print(u);%>" class="icon-arrow-right"></i><b><%out.print(cats.get(u));%></b></a></td></tr><%
+%><tr class="warning1"  style=" background-color: #<%out.print(BackGrCol);%>;" ><td><a onclick="showhide('<%out.print(u);%>')"><i id="im<%out.print(u);%>" class="icon-arrow-right"></i></a>&nbsp;<a href="category.jsp?c=<%out.print(u);%>&fonFm=<%out.print(fonFm);%>&col=<%out.print("FF8800");%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"  style=" color: #<%out.print(colors.get(color_ch));%>;"><b><%out.print(cats.get(u));%></b></a></td></tr><%
                     }
                 }
                 TopicsData topics = NewSumInstance.getTopics(values, cats.get(u));
@@ -113,7 +113,7 @@
 
                     %>
                     <div>
-                        <a href="category.jsp?&c=<%out.print(u);%>&fonFm=<%out.print(fonFm);%>&col=<%out.print("FF8800");%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"  style="color: #<%out.print(FontCol);%>; "><%out.print(topics.get(TopTwo).getTopicTitle());%></a>
+                        <a href="category.jsp?&top=<%out.print(TopTwo);%>&c=<%out.print(u);%>&fonFm=<%out.print(fonFm);%>&col=<%out.print("FF8800");%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"  style="color: #<%out.print(FontCol);%>; "><%out.print(topics.get(TopTwo).getTopicTitle());%></a>
                     </div>
                     <hr style="border-color:#<%out.print(FontCol);%>; height: 3px;"/><%
 
