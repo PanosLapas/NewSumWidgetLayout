@@ -6,8 +6,8 @@
 
 <%@page import="java.net.URLEncoder"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="org.scify.NewSumServer.Server.JSon.*"%>
-<%@page import="org.scify.NewSumServer.Server.Adaptor.*" %>
+<%@page import="org.scify.NewSumInterface.Server.JSon.*"%>
+<%@page import="org.scify.NewSumInterface.Server.Adaptor.*" %>
 <%@page  language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.net.URLEncoder"%>
 <!DOCTYPE html>
@@ -60,12 +60,12 @@
                 if (thema === 'dark') {
                     backGrCol = '58595b';
                     FontCol = 'ffffff';
-                    parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol=" + backGrCol + "&fontCol=" + FontCol + "&refresh=" + refTim;
+                    parent.white1.location.href = "http://83.212.110.120:8080/WebApplication1/Layout.jsp?&font-family=" + fontfm + "&backGrCol=" + backGrCol + "&fontCol=" + FontCol + "&refresh=" + refTim;
                 }
                 else {
                     backGrCol = 'ffffff';
                     FontCol = '000000';
-                    parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol=" + backGrCol + "&fontCol=" + FontCol + "&refresh=" + refTim;
+                    parent.white1.location.href = "http://83.212.110.120:8080/WebApplication1/Layout.jsp?&font-family=" + fontfm + "&backGrCol=" + backGrCol + "&fontCol=" + FontCol + "&refresh=" + refTim;
                 }
             }
         </script>
@@ -123,7 +123,7 @@
             function changeFonts() {
                 //afou exoun epilegei h grammatoseira kai to megethos grammatoseiras,  patwntas to koumpi "Proepiskophsh" ginetai anenewsh tou iframe
 
-                parent.white1.location.href = "http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=" + fontfm + "&backGrCol=" + backGrCol + "&fontCol=" + FontCol + "&refresh=" + refTim;
+                parent.white1.location.href = "http://83.212.110.120:8080/WebApplication1/Layout.jsp?&font-family=" + fontfm + "&backGrCol=" + backGrCol + "&fontCol=" + FontCol + "&refresh=" + refTim;
             }
         </script>
         <script>
@@ -136,7 +136,7 @@
             function Generate() {
                 var gener = document.getElementById('white1');
                 var src = $(gener).attr('src');
-                src = "http://localhost:8080/NewSumWebWidgetLayoutDummy/index.jsp?rowscol=" + rowcol + "&backgroundcol=" + backgrcol + "&titlecol=" + titlecol + "&categories=" + CatArray + "&font-size=" + fontsz + "&font-family=" + fontfm + "&refresh=" + refTim;
+                src = "http://83.212.110.120:8080/WebApplication1/Layout.jsp?rowscol=" + rowcol + "&backgroundcol=" + backgrcol + "&titlecol=" + titlecol + "&categories=" + CatArray + "&font-size=" + fontsz + "&font-family=" + fontfm + "&refresh=" + refTim;
                 var w = gener.style.width;
                 var h = gener.style.height;
                 document.getElementById('CodeText').value = "<iframe src='" + src + "' width='" + w + "' height='" + h + "'>";
@@ -174,7 +174,7 @@
 
             <div class="span5">
                 <div id="white" >
-                    <iframe id="white1" name="white1" src="http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=Arial,sans-serif&backGrCol=ffffff&fontCol=000000"   width="470" height="270"></iframe> 
+                    <iframe id="white1" name="white1" src="http://83.212.110.120:8080/WebApplication1/Layout.jsp?&font-family=Arial,sans-serif&backGrCol=ffffff&fontCol=000000"   width="470" height="270"></iframe> 
                 </div><br><br><br><br><br><br><br>
             </div>
 

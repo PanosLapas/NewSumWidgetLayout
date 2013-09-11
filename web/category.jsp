@@ -4,38 +4,34 @@
     Author     : plapas
 --%>
 
+<%@page import="java.util.TimeZone"%>
+<%@page import="org.scify.NewSumInterface.Server.JSon.*"%>
+<%@page import="org.scify.NewSumInterface.Server.Adaptor.*"%>
 <%@page import="java.util.Calendar"%>
-<%@page import="org.scify.NewSumServer.Server.Adaptor.*"%>
-<%@page import="org.scify.NewSumServer.Server.JSon.*" %>
 <%@page import="java.util.ArrayList"%>
 <%@page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8"%> 
-<%  String top1 = null;
+<%  response.addHeader("Refresh","1800");
+    String top1 = null;
     Integer top = -1;
     try {
-        top1 = request.getParameter("top");
-        top = Integer.parseInt(top1);
-        //String Categ = request.getParameter("name_cat");
+        top1 = request.getParameter("top");//getting the number(0 or 1 -depends on which title of the first two- the user clicked )
+        top = Integer.parseInt(top1);//reverse it to integer
     } catch (Exception exc) {
     }
-    String g = request.getParameter("c");
-    String BackGrCol = request.getParameter("backGrCol");
+    String g = request.getParameter("c");//getting the position of the category in the list
+    Integer in = Integer.parseInt(g);//reverse it to integer 
+    String BackGrCol = request.getParameter("backGrCol");//getting the theme color
     String FontCol = request.getParameter("fontCol");
-    String fontFm = request.getParameter("fonFm");
+    String fontFm = request.getParameter("fonFm");//font family
     String col = request.getParameter("col");
-    Integer in = Integer.parseInt(g);
-    String all = session.getAttribute("categories").toString();
-    String ct[] = all.split(",");
-    ArrayList<String> cats = new ArrayList();
-    for (int c = 0; c < ct.length; c++) {
-        cats.add(ct[c]);
-    }
-    String cat_name = cats.get(in);
+    String cat_name = null;//finding the selected category(when clicking on category's name)
 %>    
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1.0;" >
         <link href="css/bootstrap/bootstrap-responsive.min.css" rel="stylesheet">
+        <!--Calling the css with appropriate variables--> 
         <link href="css/bootstrap/CreateCss.jsp?backGrCol=<%out.print(BackGrCol);%>&FontCol=<%out.print(FontCol);%>&fonFm=<%out.print(fontFm);%>" rel="stylesheet">
         <title>Categories</title>
         <script>
@@ -53,21 +49,22 @@
                         }
                     }
                     divid.style.display = (divid.style.display == 'block' ? 'none' : 'block');
-                    if (document.getElementById("im" + id).className === "icon-arrow-right") {
-                        document.getElementById("im" + id).className = "icon-arrow-down";
+                    if (document.getElementById("im" + id).className === "icon-arrow-right") {//using right arrow
+                        document.getElementById("im" + id).className = "icon-arrow-down";//reversre it to down arrow
                     } else {
-                        document.getElementById("im" + id).className = "icon-arrow-right";
+                        document.getElementById("im" + id).className = "icon-arrow-right";//change to right 
                     }
                 }
             }
-        </script>
-        <script>
-            function getCateg(category) {
-                name_cat = $(category).attr('value');
-                window.location.href = "news_by_source.jsp?&name_cat=" + name_cat + "&c=<%out.print(g);%>&fonFm=<%out.print(fontFm);%>&col=<%out.print("FF8800");%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>";
-            }
-            function getAll() {
-                window.location.href = "category.jsp?&c=<%out.print(g);%>&fonFm=<%out.print(fontFm);%>&col=<%out.print("FF8800");%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>";
+            function readit(Id){
+                    var color=document.getElementById(Id).style.color;
+                    
+                    if(color=="rgb(222, 189, 238)"){                  
+                        document.getElementById(Id).style.color='#FF8800';
+                    }
+                    if(color=="rgb(153, 51, 204)"){                  
+                       document.getElementById(Id).style.color='#FF8800';
+                    }   
             }
         </script>
     </head>
@@ -76,8 +73,8 @@
             <div class='navbar-inner' style="height: auto; text-align:  center;">
                 <div class="container-fluid">
                     <ul class="nav" role="navigation">
-                        <li style=" font-size: 18px; color: #ffffff; padding-top: 2.5%;" ><a href="http://localhost:8080/NewSumWebWidgetLayoutDummy/BasicLayout.jsp?&font-family=<%out.print(fontFm);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"><b>News</b></a></li>                      
                         <li ><a href="http://www.scify.gr/site/el/our-projects-el/completed-projects-el/newsum-el" target="_blank"><img src="img/Widget-logo.png"></a></li>
+                        <li style=" font-size: 16px; color: #ffffff;" ><a href="Layout.jsp?&font-family=<%out.print(fontFm);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"><b>NewSum</b></a></li>                      
                         <li class="dropdown"><a id="drop1" class="dropdown-toggle" data-toggle="dropdown" role="button" href="#"><img src="img/sett.png"></a>
                             <ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
                                 <li role="presentation"><a role="menuitem">Ελληνικά</a></li>
@@ -88,172 +85,164 @@
                 </div>
             </div>
         </div>
-        <%
-            try {
+        <%  ArrayList<String> values=null;
+            CategoriesData categories=null;
+            TopicsData topics=null;
+            ArrayList<String> topicIds=null;
+            SummaryData summary=null;
+            ArrayList<String> sum=null;
+            try{
                 org.scify.newsumserver.server.newsumfreeservice.NewSumFreeService_Service service = new org.scify.newsumserver.server.newsumfreeservice.NewSumFreeService_Service();
                 org.scify.newsumserver.server.newsumfreeservice.NewSumFreeService port = service.getNewSumFreeServicePort();
-                LinksData dl = NewSumInstance.getLinkLabels();
-                ArrayList<String> values = dl.getLinks();
-                CategoriesData categories = NewSumInstance.getCategories(values);
-                TopicsData topics = NewSumInstance.getTopics(values, cat_name);
-                ArrayList<String> topicIds = topics.getTopicIDs();
-
-                if ((top == 0) || (top == 1)) {
-                    %><tr class="warning1" style="font-size: 15px;"><td style="color: #<%out.print(col);%>;"><a href="category.jsp?c=<%out.print(g);%>&fonFm=<%out.print(fontFm);%>&col=<%out.print(col);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"><b><%out.print(cat_name);%></b></a></td></tr><%
-                    %><br>  <tr class="warning1" style=" font-size: 14px;"><td><%
-                    %>
-                    <a style="color:#<%out.print(FontCol);%>;"><%out.print(topics.get(top).getTopicTitle());%></a>
-                </td></tr>
-                <%
-                    SummaryData summary = NewSumInstance.getSummary(topicIds.get(top), values);
-                    ArrayList<String> sum = summary.getSummaries();
-                %><tr class="warning1" id="<%out.print(top);%>" style="font-size: 13px;"><td>
-                    <hr style="border-color:#<%out.print(FontCol);%>; height: 3px;"/><%
-
-                        Calendar datetime = topics.get(top).getDate();
-                    %><img style=" width: 150px; height: 100px;" src="img/<%out.print(cat_name);%>.png"><br><%
-                    %><span class="label label-info" ><%out.print(datetime.getTime().getDay() + "-" + datetime.getTime().getMonth() + "-" + (datetime.getTime().getYear() + 1900));%></span><br><%
-
-                        for (int position = 0; position < summary.getSnippets().size(); position++) {
-                        %> 
-                        <% out.print(sum.get(position));%>&nbsp;&nbsp;<span class="label label-info" <%if (BackGrCol.equals("58595b")) {%>style="background-color:#<%out.print("ffffff");%>"<%}%>><a href="<%out.print(summary.getSnippets().get(position).getSourceUrl());%>" target="_blank" <%if (BackGrCol.equals("ffffff")) {%>style="color:#<%out.print("ffffff");%>"<%}%>><%out.print(summary.getSnippets().get(position).getSourceName());%></a></span>
-                    <hr style="border-color:#<%out.print(FontCol);%>; height: 3px;"/>
-                    <%
-                        }
-
-                    %><br>Sources : <%for (int snip = 0; snip < summary.getSnippets().size(); snip++) {
-                    %> 
-                    <span class="label label-info" <%if (BackGrCol.equals("58595b")) {%>style="background-color:#<%out.print("ffffff");%>"<%}%>><a href="<%out.print(summary.getSnippets().get(snip).getSourceUrl());%>" target="_blank" <%if (BackGrCol.equals("ffffff")) {%>style="color:#<%out.print("ffffff");%>"<%}%> ><%out.print(summary.getSnippets().get(snip).getSourceName() + "  ");%></a></span>
-                        <%}%>
-                    <hr style="border-color:#<%out.print(FontCol);%>; height: 3px;"/>
-                    <%%></td></tr><a href="BasicLayout.jsp?&font-family=<%out.print(fontFm);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"><i class="icon-arrow-left"></i></a><%
-            // }
-        } else {
-        %><table class="table " style=" text-align: center;"><%
-            %><tr class="warning1" style="font-size: 15px;"><td style="color: #<%out.print(col);%>;"><a href="category.jsp?c=<%out.print(g);%>&fonFm=<%out.print(fontFm);%>&col=<%out.print(col);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"><b><%out.print(cat_name);%></b></a></td></tr><%
-                ArrayList phges = new ArrayList();
-
-                for (int t = 0; t < topicIds.size(); t++) {
-                    SummaryData summary = NewSumInstance.getSummary(topicIds.get(t), values);
-                    ArrayList<String> sum = summary.getSummaries();
-                    if (summary.getSnippets().size() > 1) {
-                        for (int sour = 0; sour < summary.getSnippets().size(); sour++) {
-                            phges.add(summary.getSnippets().get(sour).getSourceName());
-                        }
-                        for (int p = 0; p < phges.size(); p++) {
-                            int w = p + 1;
-                            while (w < phges.size()) {
-                                if (phges.get(p).equals(phges.get(w))) {
-                                    phges.remove(phges.get(w));
-                                } else {
-                                    w++;
-                                }
-                            }
-                        }
+                try{
+                LinksData dl = NewSumInstance.getLinkLabels();//get link labels
+                values = dl.getLinks();
+                }catch (Exception ex){
+                 response.sendRedirect("error.jsp?&m=links&font-family="+fontFm+"&backGrCol="+BackGrCol+"&fontCol= "+FontCol);
+                }
+                try{
+                categories = NewSumInstance.getCategories(values);//get categories
+                }catch (Exception ex){
+                 response.sendRedirect("error.jsp?&m=cats&font-family="+fontFm+"&backGrCol="+BackGrCol+"&fontCol= "+FontCol);
+                }
+                for (int category = 0; category < categories.size(); category++) {
+                    if (category == in) {
+                        cat_name = categories.get(category);//find the category the user want to see
                     }
                 }
-                            %><select style=" color: #0044cc;">
-                <option onclick="getAll()">Όλες οι πηγές</option>
-                <%for (int pg = 0; pg < phges.size(); pg++) {%>
-                <option id="m<%out.print(pg);%>" onclick="getCateg(this)"><%out.print(phges.get(pg));%></option>
-                <%}%>
-            </select><%
-                int counter = 0;
-                for (int k = 0; k < topicIds.size(); k++) {
-                    SummaryData summary = NewSumInstance.getSummary(topicIds.get(k), values);
-                    ArrayList<String> sum = summary.getSummaries();
-                    if (sum.size() > 1) {
-
-                        ArrayList sources = new ArrayList();
-                        ArrayList srcName = new ArrayList();
-                        for (int sour = 0; sour < summary.getSnippets().size(); sour++) {
-                            sources.add(summary.getSnippets().get(sour).getSourceUrl());
-                            srcName.add(summary.getSnippets().get(sour).getSourceName());
-
-                        }
-
-                        for (int a = 0; a < sources.size(); a++) {
-                            int b = a + 1;
-                            while (b < sources.size()) {
-                                if (sources.get(a).equals(sources.get(b))) {
-                                    sources.remove(sources.get(b));
-                                    srcName.remove(srcName.get(b));
-                                } else {
-                                    b++;
-                                }
-                            }
-                        }
-                        if (sources.size() > 1) {
-            %><tr class="warning1" onclick="showhide('<%out.print(k);%>')" style="font-size:14px;"><td><a onclick="showhide('<%out.print(k);%>')" style="color:#<%out.print(FontCol);%>;"><i id="im<%out.print(k);%>" class="icon-arrow-right"></i><%out.print(topics.get(k).getTopicTitle());%></a></td></tr><%
-            %><tr class="warning1" id="<%out.print(k);%>" style="font-size: 13px; display:none;"><td>
-                    <hr style="border-color:#<%out.print(FontCol);%>; height: 3px;"/><%
-
-                        Calendar datetime = topics.get(k).getDate();
-                    %><img style=" width: 150px; height: 100px;" src="img/<%out.print(cat_name);%>.png"><br><%
-                    %><span class="label label-info" ><%out.print(datetime.getTime().getDay() + "-" + datetime.getTime().getMonth() + "-" + (datetime.getTime().getYear() + 1900));%></span><br><%
-
-                        for (int position = 0; position < sources.size(); position++) {
-                        %> 
-                        <% out.print(sum.get(position));%>&nbsp;&nbsp;<span class="label label-info" <%if (BackGrCol.equals("58595b")) {%>style="background-color:#<%out.print("ffffff");%>"<%}%>><a href="<%out.print(sources.get(position));%>" target="_blank" <%if (BackGrCol.equals("ffffff")) {%>style="color:#<%out.print("ffffff");%>"<%}%>><%out.print(srcName.get(position));%></a></span>
-                    <hr style="border-color:#<%out.print(FontCol);%>; height: 3px;"/>
-                    <%
-                        }
-
-                    %><br>Sources : <%for (int snip = 0; snip < sources.size(); snip++) {
+                try{
+                topics = NewSumInstance.getTopics(values, cat_name);//getting topics from all sources but for the selected category
+                topicIds = topics.getTopicIDs();//creating a list of topics
+                }catch (Exception ex){
+                 response.sendRedirect("error.jsp?&m=topics&font-family="+fontFm+"&backGrCol="+BackGrCol+"&fontCol= "+FontCol);
+                }
+                
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+             
+          if ((top == 0) || (top == 1)) {
+ //when user clicks on one topic in the BasicLayout show him only the 'sentence' for the specified topic
+                   %><table class="table " style=" text-align: center;">         
+                   <br><tr class="warning1" style="font-size: 12px;"><td style="color: #<%out.print(col);%>;"><a href="Layout.jsp?&font-family=<%out.print(fontFm);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"><span class="badge badge-info"><i class="icon-arrow-left"></i></span></a>&nbsp;&nbsp;<a href="category.jsp?c=<%out.print(g);%>&fonFm=<%out.print(fontFm);%>&col=<%out.print(col);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"><b><%out.print(cat_name);%></b></a></td></tr>
+                   <tr><td><a style="color:#<%out.print(FontCol);%>;"><%out.print(topics.get(top).getTopicTitle());%></a></td></tr>          
+                   <%
+                   try{
+                   summary = NewSumInstance.getSummary(topicIds.get(top), values);//getting summaries from all sources for the specified topic
+                   sum = summary.getSummaries();//creating a list of the summaries
+                   }catch (Exception ex){
+                    response.sendRedirect("error.jsp?&m=sum&font-family="+fontFm+"&backGrCol="+BackGrCol+"&fontCol= "+FontCol);
+                   }
+                   %><tr class="warning1" id="<%out.print(top);%>" style="font-size: 12px;"><td>
+                   <%
+                   Calendar datetime = topics.get(top).getDate();//getting the published date of the topic and print it
+                   %><img style=" width: 150px; height: 100px;" src="img/<%out.print(cat_name);%>.png"><br><%//expecting image url
+                   %><br><span class="label label-info" <%if(BackGrCol.equals("58595b")){%>style="background-color:#<%out.print("C0C0C0");%>; color:#007FFF;"<%}else{%>style="background-color:#<%out.print("00C5CD");%>;"<%}%> ><%out.print(datetime.getTime().getDate() + "-" + (datetime.getTime().getMonth()+1) + "-" + (datetime.getTime().getYear() + 1900));%></span><br><%
+      //for all the size of the snippets show each summary
+                   for (int position = 0; position < sum.size(); position++) {
+      //show summaries with the appropriate source label and url
+                       if(position>0){
+                           if(!(summary.getSnippets().get(position).getSourceName()).equals(summary.getSnippets().get(position - 1).getSourceName())){%><i class="icon-asterisk"></i><%}
+                       }
+                       else{%><i class="icon-asterisk"></i><%}
+                       %><%out.print(sum.get(position));%>
+                       
+                       <%if(position < (sum.size() - 1)) {
+                            if(!(summary.getSnippets().get(position).getSourceName()).equals(summary.getSnippets().get(position + 1).getSourceName())) {%>
+                            <span class="label label-info" <%if (BackGrCol.equals("58595b")) {%>style="background-color:#<%out.print("ffffff");%>"<%}%>><a href="<%out.print(summary.getSnippets().get(position).getSourceUrl());%>" target="_blank" <%if (BackGrCol.equals("ffffff")) {%>style="color:#<%out.print("ffffff");%>"<%}%>><%out.print(summary.getSnippets().get(position).getSourceName());%></a></span>
+                        <%}
+                        }%>
+                        <%if (position == sum.size() - 1) {%>
+                        <span class="label label-info" <%if (BackGrCol.equals("58595b")) {%>style="background-color:#<%out.print("ffffff");%>"<%}%>><a href="<%out.print(summary.getSnippets().get(position).getSourceUrl());%>" target="_blank" <%if (BackGrCol.equals("ffffff")) {%>style="color:#<%out.print("ffffff");%>"<%}%>><%out.print(summary.getSnippets().get(position).getSourceName());%></a></span>
+                        <%}%><br>
+                        <%
+                    }
+      //show all the sources of the topic
+                    %><br>Sources : <%for (int snip = 0; snip < summary.getSources().size(); snip++) {
                     %> 
-                    <span class="label label-info" <%if (BackGrCol.equals("58595b")) {%>style="background-color:#<%out.print("ffffff");%>"<%}%>><a href="<%out.print(sources.get(snip));%>" target="_blank" <%if (BackGrCol.equals("ffffff")) {%>style="color:#<%out.print("ffffff");%>"<%}%> ><%out.print(srcName.get(snip) + "  ");%></a></span>
-                        <%}%>
-                    <hr style="border-color:#<%out.print(FontCol);%>; height: 3px;"/>
-                    <%%></td></tr><%} else {
-                                    counter++;
-                                }
-                            } else {
-                                counter++;
-                            }
-
-                        }//edw kwdikas gia kathgories p ekeinh tn stigmh dn exoun size>1 kai emfanizoume ta 2 prwta topics
-
-                        if (counter == topicIds.size()) {
-                            for (int TopTwo = 0; TopTwo < 2; TopTwo++) {
-                    %>  <tr class="warning1" style=" font-size: 14px;"><td><%
-                    %>
-                    <a onclick="showhide('<%out.print(TopTwo);%>')" style="color:#<%out.print(FontCol);%>;"><i id="im<%out.print(TopTwo);%>" class="icon-arrow-right"></i><%out.print(topics.get(TopTwo).getTopicTitle());%></a>
-                </td></tr>
-                <%
-                    SummaryData summary = NewSumInstance.getSummary(topicIds.get(TopTwo), values);
-                    ArrayList<String> sum = summary.getSummaries();
-                %><tr class="warning1" id="<%out.print(TopTwo);%>" style="font-size: 13px; display:none;"><td>
-                    <hr style="border-color:#<%out.print(FontCol);%>; height: 3px;"/><%
-
-                        Calendar datetime = topics.get(TopTwo).getDate();
-                    %><img style=" width: 150px; height: 100px;" src="img/<%out.print(cat_name);%>.png"><br><%
-                    %><span class="label label-info" ><%out.print(datetime.getTime().getDay() + "-" + datetime.getTime().getMonth() + "-" + (datetime.getTime().getYear() + 1900));%></span><br><%
-
-                        for (int position = 0; position < summary.getSnippets().size(); position++) {
-                        %> 
-                        <% out.print(sum.get(position));%>&nbsp;&nbsp;<span class="label label-info" <%if (BackGrCol.equals("58595b")) {%>style="background-color:#<%out.print("ffffff");%>"<%}%>><a href="<%out.print(summary.getSnippets().get(position).getSourceUrl());%>" target="_blank" <%if (BackGrCol.equals("ffffff")) {%>style="color:#<%out.print("ffffff");%>"<%}%>><%out.print(summary.getSnippets().get(position).getSourceName());%></a></span>
-                    <hr style="border-color:#<%out.print(FontCol);%>; height: 3px;"/>
+                    <span class="label label-info" <%if (BackGrCol.equals("58595b")) {%>style="background-color:#<%out.print("ffffff");%>"<%}%>><a href="<%out.print(summary.getSources().get(snip).getUrl());%>" target="_blank" <%if (BackGrCol.equals("ffffff")) {%>style="color:#<%out.print("ffffff");%>"<%}%> ><%out.print(summary.getSources().get(snip).getName() + "  ");%></a></span>
+                    <%}%>
+                    <br>
+                    </td></tr>
                     <%
-                        }
+           } //end of code when user clicks on a topic
+                
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+                
+           else{
+              
+//when the user clicks on a category name show him only topics with size greater than 1 (the summary comes from more than one sources)
+                %><table class="table " style=" text-align: center;"><%
+                int counter = 0;//counter for checking if this specified moment we have topics with size greater than one
+                Calendar datetime = topics.get(0).getDate();//get Date
+                int day = datetime.getTime().getDate();//initilize date by the date of the first topic
+                int month = (datetime.getTime().getMonth() + 1);
+                int year = datetime.getTime().getYear();
+                int hours = datetime.getTime().getHours();
+                int mins = datetime.getTime().getMinutes();
+                %><div class="warning1" style="font-size: 12px;">
+                <a href="Layout.jsp?&font-family=<%out.print(fontFm);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"><span class="badge badge-info"><i class="icon-arrow-left"></i></span></a>
+                <b><%out.print(cat_name);%></b></div><%
+                
+                for (int k = 0; k < topics.size(); k++) {//loop for all the size of the topics   
 
-                    %><br>Sources : <%for (int snip = 0; snip < summary.getSnippets().size(); snip++) {
-                    %> 
-                    <span class="label label-info" <%if (BackGrCol.equals("58595b")) {%>style="background-color:#<%out.print("ffffff");%>"<%}%>><a href="<%out.print(summary.getSnippets().get(snip).getSourceUrl());%>" target="_blank" <%if (BackGrCol.equals("ffffff")) {%>style="color:#<%out.print("ffffff");%>"<%}%> ><%out.print(summary.getSnippets().get(snip).getSourceName() + "  ");%></a></span>
-                        <%}%>
-                    <hr style="border-color:#<%out.print(FontCol);%>; height: 3px;"/>
-                    <%%></td></tr><%
+                    if (topics.get(k).getSourcesNum() > 1) {//check topic's date and if date is different change the values
+                          int day1 = topics.get(k).getDate().getTime().getDate();
+                          int month1 = (topics.get(k).getDate().getTime().getMonth() + 1);
+                          int year1 = topics.get(k).getDate().getTime().getYear();
+                          if (k != 0) {
+                             if ((day1 != day) || (month1 != month) || (year1 != year)) {
+                                datetime = topics.get(k).getDate();
+                                day = datetime.getTime().getDate();
+                                month = (datetime.getTime().getMonth() + 1);
+                                year = datetime.getTime().getYear();
+                                %><div><span class="label label-info" <%if(BackGrCol.equals("58595b")){%>style="background-color:#<%out.print("C0C0C0");%>; color:#007FFF;"<%}else{%>style="background-color:#<%out.print("00C5CD");%>;"<%}%> > <%out.print(day + "-" + month + "-" + (year + 1900));%></span></div><%
+                              }
+                          }else {
+                                %><div><span class="label label-info"<%if(BackGrCol.equals("58595b")){%>style="background-color:#<%out.print("C0C0C0");%>; color:#007FFF;"<%}else{%>style="background-color:#<%out.print("00C5CD");%>;"<%}%> > <%out.print(day + "-" + month + "-" + (year + 1900));%></span></div><%
+                          }
+                          hours = topics.get(k).getDate().getTime().getHours();//get hours and minutes
+                          mins = topics.get(k).getDate().getTime().getMinutes();
+                          %><div  style="font-size:12px;"><a href="Topic.jsp?&c=<%out.print(in);%>&t=<%out.print(k);%>&font-family=<%out.print(fontFm);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>" <%if(!BackGrCol.equals("ffffff")){%> style="color: #debdee;"<%}else{%>style="color: #9933CC"<%}%>><%out.print(topics.get(k).getTopicTitle() + " " + "(" + hours + ":" + mins + ")");%></a><%
+                          %></div><hr style="border-color:#<%out.print(FontCol);%>; height: 1px;"/><%
+                     }else{
+                       counter++;//change counter value
+                     }
+                }
+   
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                          
+  //if the counter is equal to the topics.size this means that we have no topics with size greater than one at this moment
+                       //show first two topics
+                if (counter == topicIds.size()) {
+                   for (int TopTwo = 0; TopTwo < 2; TopTwo++) {
+                       if (TopTwo == 1){
+                          int day1 = topics.get(1).getDate().getTime().getDate();
+                          int month1 = (topics.get(1).getDate().getTime().getMonth() + 1);
+                          int year1 = topics.get(1).getDate().getTime().getYear();
+                            if ((day1 != day) || (month1 != month) || (year1 != year)) {
+                               datetime = topics.get(1).getDate();
+                               day = datetime.getTime().getDate();
+                               month = (datetime.getTime().getMonth() + 1);
+                               year = datetime.getTime().getYear();
+                               %><tr><td><span class="label label-info" <%if(BackGrCol.equals("58595b")){%>style="background-color:#<%out.print("C0C0C0");%>; color:#007FFF;"<%}else{%>style="background-color:#<%out.print("00C5CD");%>;"<%}%>><%out.print(day + "-" + month + "-" + (year + 1900));%></span></td></tr><%
                             }
-
-                                     }//telos kwdika pou afora kathgories me size<1
-%></table><%}
-           } catch (Exception ex) {
-               ex.printStackTrace();
+                        }else{
+                            %><tr><td><span class="label label-info" <%if(BackGrCol.equals("58595b")){%>style="background-color:#<%out.print("C0C0C0");%>; color:#007FFF;"<%}else{%>style="background-color:#<%out.print("00C5CD");%>;"<%}%>><%out.print(day + "-" + month + "-" + (year + 1900));%></span></td></tr><%
+                        }
+                        %><tr class="warning1" style=" font-size: 12px;"><td><a href="Topic.jsp?&c=<%out.print(in);%>&t=<%out.print(TopTwo);%>&font-family=<%out.print(fontFm);%>&backGrCol=<%out.print(BackGrCol);%>&fontCol=<%out.print(FontCol);%>"  <%if(!BackGrCol.equals("ffffff")){%> style="color: #debdee;"<%}else{%>style="color: #9933CC"<%}%>><%out.print(topics.get(TopTwo).getTopicTitle());%></a></td></tr>
+                        <%
+                   }
+                }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
+                %></table><%
            }
-            %>
+          }catch (Exception ex){
+            response.sendRedirect("error.jsp?&m=sun&font-family="+fontFm+"&backGrCol="+BackGrCol+"&fontCol= "+FontCol);
+          }
+                %>
 
 
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="js/scify.index.js"></script>
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+            <script src="js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="js/scify.index.js"></script>
     </body>
 </html>
